@@ -61,7 +61,7 @@ class WP_Doodle_Admin_UI {
 			array( $this, 'poll_id_mb' ),
 			$post->post_type,
 			'normal',   #context
-			'high'      #priority
+			'core'      #priority
 		);
 
 		# meta box with main information about the polls content
@@ -85,7 +85,6 @@ class WP_Doodle_Admin_UI {
 			'side',
 			'core'
 		);
-
 	}
 
 	/**
@@ -140,29 +139,95 @@ class WP_Doodle_Admin_UI {
 			} ?>
 
 			<div>
-				<strong><?php _e( '3 Most popular options', 'wp_doodle_polls' ); ?></strong>
-				<ul>
+				<strong><?php _e( 'Most popular options', 'wp_doodle_polls' ); ?></strong>
+
 				<?php
-				$i = 1;
-				foreach ( $poll->get_top_options() as $option => $votes ) {
-					if ( $i > 3 )
-						break;
-					$i++; ?>
-					<li><?php echo esc_attr( $option );
-						echo isset( $votes[ 'yes' ] )
-							? ' ' . ( int ) $votes[ 'yes' ]
-							: '';
-						echo isset( $votes[ 'maybe' ] )
-							? ' (' . ( int ) $votes[ 'maybe' ] . ')'
-							: '';
-						?>
-					</li>
-					<?php
-				} ?>
-				</ul>
+				echo $this->get_top_options_list( $poll );
+				?>
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * format the popular options output
+	 *
+	 * @param WP_Doodle_Poll $poll
+	 * @return string
+	 */
+	public function get_top_options_list( $poll ) {
+
+		$options = $poll->get_top_options();
+		//print a table instead of ul if there are "maybe"-opinions
+		$print_table = FALSE;
+		foreach ( $options as $otion => $count ) {
+			if ( 0 < $count[ 'maybe' ] ) {
+				$print_table = TRUE;
+				break;
+			}
+		}
+		//date format
+		$date_poll   = $poll->is_datetime_poll() || $poll->is_date_poll();
+		$date_format = get_option( 'date_format' );
+		$time_format = get_option( 'time_format' );
+		$format = $date_format;
+		if ( $poll->is_datetime_poll() ) {
+			$format = sprintf(
+				_x( '%1$s %2$s %3$s', 'Datetime format. 1: date, 2:separator, 3:time', 'wp_doodle_polls' ),
+				$date_format,
+				doodle_time_format_escape( ', ' ),
+				$time_format
+			);
+		}
+		$yes   = __( 'Yes', 'wp_doodle_polls' );
+		$maybe = __( 'Maybe', 'wp_doodle_polls' );
+		if ( $print_table ) {
+			$body = <<<EOT
+<table class="dp_top_options">
+	<tr>
+		<td></td>
+		<th scope="col">$yes</th>
+		<th scope="col">$maybe</th>
+	</tr>
+	%s
+</table>
+EOT;
+			$rows = '';
+			foreach ( $options as $option => $count ) {
+				if ( $date_poll ) {
+					$date = new DateTime( $option );
+					$option = $date->format( $format );
+				}
+				$rows .= <<<EOT
+<tr>
+	<th class="dp_option" scope="row">$option</th>
+	<td class="dp_yes">{$count[ 'yes' ]}</td>
+	<td class="dp_maybe">{$count[ 'maybe' ]}</td>
+</tr>
+EOT;
+			}
+		} else {
+			$body = <<<EOT
+<ul class="dp_top_options">
+	%s
+</ul>
+EOT;
+			$rows = '';
+			foreach ( $options as $option => $count ) {
+				if ( $date_poll ) {
+					$date = new DateTime( $option );
+					$option = $date->format( $format );
+				}
+				$rows .= <<<EOT
+<li>
+	<span class="dp_option">$option</span>
+	<span class="dp_yes">{$count[ 'yes' ]}</span>
+</li>
+EOT;
+			}
+		}
+
+		return sprintf( $body, $rows );
 	}
 
 	/**
