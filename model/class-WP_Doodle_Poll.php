@@ -151,8 +151,6 @@ class WP_Doodle_Poll {
 				continue;
 			elseif ( isset( $o[ 'date' ] ) )
 				$o = ( string ) $o[ 'date' ];
-			elseif ( isset( $o[ 'time' ] ) )
-				$o = ( string ) $o[ 'time' ];
 			elseif ( isset( $o[ 'dateTime' ] ) )
 				$o = ( string ) $o[ 'dateTime' ];
 			else
