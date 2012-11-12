@@ -43,6 +43,13 @@ class WP_Doodle_Scheduler {
 
 		# add post meta to new(!) polls with the default sync-intervall
 
+		/**
+		 * meta keys die die intervall-slugs enthalten:
+		 * _wpdp_never => 6 // 0 bis 6 uhr gar nicht syncen
+		 * _wpdp_hourl => 18 // 6 bis 18 uhr stündlich syncen
+		 * _wpdp_twicedaly => 24  18 bis 24 uhr aller 6 stunden syncen
+		 */
+
 	}
 
 }
