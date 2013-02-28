@@ -8,7 +8,6 @@
 
 class WP_Doodle_Template {
 
-
 	/**
 	 * the poll
 	 *
@@ -77,7 +76,7 @@ class WP_Doodle_Template {
 			$header .= '</tr><tr>';
 			$header .= $this->poll->is_datetime_poll() || 1 > $this->poll->get_participants_count()
 					? str_repeat( '<td></td>', $col_offset )
-					: '<td>' . sprintf( __( '%d Participants', 'wp_doodle_polls' ), $this->poll->get_participants_count() ) . '</td>'
+					: '<td>' . sprintf( __( '%d Participants', 'doodle_polls' ), $this->poll->get_participants_count() ) . '</td>'
 						. str_repeat( '<td></td>', $col_offset - 1 );
 
 			foreach ( $days_left as $day => $times ) {
@@ -99,7 +98,7 @@ class WP_Doodle_Template {
 				if ( 0 < $this->poll->get_participants_count() ) {
 					$count = $this->poll->get_participants_count();
 					$header .= '<td>'
-						. sprintf( _n( '%d Participant', '%d Participants', $count, 'wp_doodle_polls' ), $count )
+						. sprintf( _n( '%d Participant', '%d Participants', $count, 'doodle_polls' ), $count )
 						. '</td>'
 						. str_repeat( '<td></td>', $col_offset - 1 );
 				} else {
@@ -121,7 +120,7 @@ class WP_Doodle_Template {
 			if ( 0 < $this->poll->get_participants_count() ) {
 				$count = $this->poll->get_participants_count();
 				$header .= '<td>'
-					. sprintf( _n( '%d Participant', '%d Participants', $count, 'wp_doodle_polls' ), $count )
+					. sprintf( _n( '%d Participant', '%d Participants', $count, 'doodle_polls' ), $count )
 					. '</td>'
 					. str_repeat( '<td></td>', $col_offset - 1 );
 			} else {

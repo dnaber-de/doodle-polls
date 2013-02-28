@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WP Doodle Polls
+ * Plugin Name: Doodle Polls
  * Description: Sync Doodle Polls to a WP custom post type
  * Plugin URI:
  * Version:     2013.02.28
@@ -8,13 +8,13 @@
  * Author URI:  http://dnaber.de/
  * License:     MIT
  * License URI: http://www.opensource.org/licenses/mit-license.php
- * Textdomain:  wp_doodle_polls
+ * Textdomain:  doodle_polls
  */
 if ( ! function_exists( 'add_filter' ) )
 	exit( 'Where\'s my WP?' );
 
 # load classes and function files
-spl_autoload_register( array( 'Wp_Doodle_Polls', 'autoload' ) );
+spl_autoload_register( array( 'WP_Doodle_Polls', 'autoload' ) );
 require_once 'doodle_functions.php';
 
 # register static hooks

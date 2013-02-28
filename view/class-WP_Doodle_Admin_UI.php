@@ -57,7 +57,7 @@ class WP_Doodle_Admin_UI {
 		# meta box for the Poll ID and Key
 		add_meta_box(
 			'wpdp-poll-head',
-			__( 'Poll Access Settings', 'wp_doodle_polls' ),
+			__( 'Poll Access Settings', 'doodle_polls' ),
 			array( $this, 'poll_id_mb' ),
 			$post->post_type,
 			'normal',   #context
@@ -68,7 +68,7 @@ class WP_Doodle_Admin_UI {
 		if ( ! empty( $post->post_content ) ) {
 			add_meta_box(
 				'wpdp-poll-info',
-				__( 'Poll Summary', 'wp_doodle_polls' ),
+				__( 'Poll Summary', 'doodle_polls' ),
 				array( $this, 'poll_info_mb' ),
 				$post->post_type,
 				'side',
@@ -79,7 +79,7 @@ class WP_Doodle_Admin_UI {
 		# maintenance
 		add_meta_box(
 			'wpdp-poll-maintenance',
-			__( 'Poll maintenance', 'wp_doodle_polls' ),
+			__( 'Poll maintenance', 'doodle_polls' ),
 			array( $this, 'poll_maintenance_mb' ),
 			$post->post_type,
 			'side',
@@ -106,7 +106,7 @@ class WP_Doodle_Admin_UI {
 		$last_activity = new DateTime( $poll->get_last_activity_date() );
 		$datetime_format = sprintf(
 			get_option( 'date_format' ) . ' %s ' . get_option( 'time_format' ),
-			doodle_time_format_escape( _x( 'at', 'Time information: {date} at {time}', 'wp_doodle_polls' ) )
+			doodle_time_format_escape( _x( 'at', 'Time information: {date} at {time}', 'doodle_polls' ) )
 		);
 
 		?>
@@ -114,32 +114,32 @@ class WP_Doodle_Admin_UI {
 			<?php
 			if ( !empty( $initiator[ 'name' ] ) ) { ?>
 				<p>
-					<strong><?php _e( 'Initiator', 'wp_doodle_polls' ); ?></strong><br />
+					<strong><?php _e( 'Initiator', 'doodle_polls' ); ?></strong><br />
 					<?php printf( $initiator_mail, $initiator[ 'name' ] ); ?>
 				</p>
 				<?php
 			} ?>
 			<p>
-				<strong><?php _e( 'Last Activity', 'wp_doodle_polls' ); ?></strong><br />
+				<strong><?php _e( 'Last Activity', 'doodle_polls' ); ?></strong><br />
 				<?php echo $last_activity->format( $datetime_format ); ?>
 			</p>
 
 			<p>
-				<strong><?php _e( 'Number of participants', 'wp_doodle_polls' ); ?></strong><br />
+				<strong><?php _e( 'Number of participants', 'doodle_polls' ); ?></strong><br />
 				<?php echo $poll->get_participants_count(); ?>
 			</p>
 
 			<?php
 			if ( '' != $poll->get_location() ); { ?>
 				<p>
-					<strong><?php _e( 'Location', 'wp_doodle_polls' ); ?></strong><br />
+					<strong><?php _e( 'Location', 'doodle_polls' ); ?></strong><br />
 					<?php echo $poll->get_location(); ?>
 				</p>
 				<?php
 			} ?>
 
 			<div>
-				<strong><?php _e( 'Most popular options', 'wp_doodle_polls' ); ?></strong>
+				<strong><?php _e( 'Most popular options', 'doodle_polls' ); ?></strong>
 
 				<?php
 				echo $this->get_top_options_list( $poll );
@@ -173,14 +173,14 @@ class WP_Doodle_Admin_UI {
 		$format = $date_format;
 		if ( $poll->is_datetime_poll() ) {
 			$format = sprintf(
-				_x( '%1$s %2$s %3$s', 'Datetime format. 1: date, 2:separator, 3:time', 'wp_doodle_polls' ),
+				_x( '%1$s %2$s %3$s', 'Datetime format. 1: date, 2:separator, 3:time', 'doodle_polls' ),
 				$date_format,
 				doodle_time_format_escape( ', ' ),
 				$time_format
 			);
 		}
-		$yes   = __( 'Yes', 'wp_doodle_polls' );
-		$maybe = __( 'Maybe', 'wp_doodle_polls' );
+		$yes   = __( 'Yes', 'doodle_polls' );
+		$maybe = __( 'Maybe', 'doodle_polls' );
 		if ( $print_table ) {
 			$body = <<<EOT
 <table class="dp_top_options">
@@ -245,39 +245,39 @@ EOT;
 		$poll_ID         = $poll_post->ID;
 		$consumer_key    = $poll_post->consumer->key;
 		$consumer_secret = $poll_post->consumer->secret;
-		$post_nonce      = wp_create_nonce( 'wp_doodle_polls' );
+		$post_nonce      = wp_create_nonce( 'doodle_polls' );
 		$post_content    = esc_attr( $poll_post->post->post_content ); # pass post-content through for autosave
 		?>
 		<div class="inside wpdp-clearfix">
 			<div class="wpdp-col">
-				<h4><?php _e( 'Poll ID', 'wp_doodle_polls' ); ?></h4>
+				<h4><?php _e( 'Poll ID', 'doodle_polls' ); ?></h4>
 				<input type="hidden" name="wpdp[post_nonce]" value="<?php echo $post_nonce; ?>" />
 				<input type="hidden" name="content" value="<?php echo $post_content; ?>" />
 				<p class="description">
-					<?php printf( __( 'You can find the ID as a part of the URL. In %1$s it\'s %2$s', 'wp_doodle_polls' ), '<code>http://doodle.com/4mqhvg8safemnv2c</code>', '<code>4mqhvg8safemnv2c</code>' ); ?>
+					<?php printf( __( 'You can find the ID as a part of the URL. In %1$s it\'s %2$s', 'doodle_polls' ), '<code>http://doodle.com/4mqhvg8safemnv2c</code>', '<code>4mqhvg8safemnv2c</code>' ); ?>
 				</p>
 				<p>
-					<label for="wpdp-poll-id"><?php _e( 'Poll ID', 'wp_doodle_polls' ); ?></label>
+					<label for="wpdp-poll-id"><?php _e( 'Poll ID', 'doodle_polls' ); ?></label>
 					<input id="wpdp-poll-id" class="large-text" type="text" name="wpdp[poll_id]" value="<?php echo $poll_ID; ?>"
-						<?php if ( ! $new ) { ?> readonly="readonly" title="<?php _e( "Poll ID can't be changed", 'wp_doodle_polls' ); ?>" <?php } ?>
+						<?php if ( ! $new ) { ?> readonly="readonly" title="<?php _e( "Poll ID can't be changed", 'doodle_polls' ); ?>" <?php } ?>
 					/>
 				</p>
 				<p>
-					<label for="wpdp-poll-key"><?php _e( 'Poll Key (Optional)', 'wp_doodle_polls' ); ?></label>
+					<label for="wpdp-poll-key"><?php _e( 'Poll Key (Optional)', 'doodle_polls' ); ?></label>
 					<input id="wpdp-poll-key" class="large-text" type="text" name="wpdp[poll_key]" value="<?php echo $poll_key; ?>" />
 				</p>
 			</div>
 			<div class="wpdp-col" >
-				<h4><?php _e( 'Access keys', 'wp_doodle_polls' ); ?></h4>
+				<h4><?php _e( 'Access keys', 'doodle_polls' ); ?></h4>
 				<p class="description">
-					<?php printf( __( 'You can generate the access keys at %s', 'wp_doodle_polls' ), '<a href="https://doodle.com/mydoodle/consumer/credentials.html">https://doodle.com/mydoodle/consumer/credentials.html</a>' ); ?>
+					<?php printf( __( 'You can generate the access keys at %s', 'doodle_polls' ), '<a href="https://doodle.com/mydoodle/consumer/credentials.html">https://doodle.com/mydoodle/consumer/credentials.html</a>' ); ?>
 				</p>
 				<p>
-					<label for="wpdp-customer-key"><?php _e( 'Customer key', 'wp_doodle_polls' ); ?> </label>
+					<label for="wpdp-customer-key"><?php _e( 'Customer key', 'doodle_polls' ); ?> </label>
 					<input id="wpdp-customer-key" class="large-text" type="text" name="wpdp[consumer_key]" value="<?php echo $consumer_key; ?>" />
 				</p>
 				<p>
-					<label for="wpdp-customer-secret"><?php _e( 'Customer secret', 'wp_doodle_polls' ); ?> </label>
+					<label for="wpdp-customer-secret"><?php _e( 'Customer secret', 'doodle_polls' ); ?> </label>
 					<input id="wpdp-customer-secret" class="large-text" type="text" name="wpdp[consumer_secret]" value="<?php echo $consumer_secret; ?>" />
 				</p>
 			</div>
@@ -305,9 +305,9 @@ EOT;
 					<option></option>
 				</select>
 			</div>
-			<p><?php printf( __( 'Last synchronization: %s', 'wp_doodle_polls' ), '' ); ?></p>
+			<p><?php printf( __( 'Last synchronization: %s', 'doodle_polls' ), '' ); ?></p>
 
-			<p><a href="#" class="button-primary"><?php _e( 'synchronize now', 'wp_doodle_polls' ); ?></a></p>
+			<p><a href="#" class="button-primary"><?php _e( 'synchronize now', 'doodle_polls' ); ?></a></p>
 		</div>
 		<?php
 	}

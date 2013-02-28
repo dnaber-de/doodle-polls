@@ -68,7 +68,7 @@ class WP_Doodle_Admin {
 		if ( ! current_user_can( 'edit_' . $cap ) )
 			return FALSE;
 
-		if ( ! wp_verify_nonce( $_POST[ 'wpdp' ][ 'post_nonce' ], 'wp_doodle_polls' ) )
+		if ( ! wp_verify_nonce( $_POST[ 'wpdp' ][ 'post_nonce' ], 'doodle_polls' ) )
 			return FALSE;
 
 		return TRUE;
