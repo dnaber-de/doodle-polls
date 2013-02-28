@@ -96,7 +96,7 @@ class WP_Doodle_Polls {
 		oAuth_Request::$http_adapter = 'Wp_Http_Adapter';
 
 		# return here on de-/activation / uninstallation
-		if ( in_array( $this->status, array( 'activate', 'deactivate', 'uninstall' ) ) )
+		if ( in_array( self::$status, array( 'activate', 'deactivate', 'uninstall' ) ) )
 			return;
 
 		# run all components
@@ -124,7 +124,7 @@ class WP_Doodle_Polls {
 	 * @wp-hook deactivate_wp-doodle-polls/wp-doodle-polls.php
 	 * @return void
 	 */
-	public static function on_activation() {
+	public static function on_deactivation() {
 
 		remove_filter( 'init', array( __CLASS__, 'get_instance' ) );
 		self::$status = 'deactivate';
