@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: WP Doodle Polls
- * Description: Foo
- * Plugin URI:  https://gist.github.com/3464269
- * Version:     2012.08.28
+ * Description: Sync Doodle Polls to a WP custom post type
+ * Plugin URI:
+ * Version:     2013.02.28
  * Author:      David Naber
  * Author URI:  http://dnaber.de/
  * License:     MIT
@@ -17,11 +17,16 @@ if ( ! function_exists( 'add_filter' ) )
 spl_autoload_register( array( 'Wp_Doodle_Polls', 'autoload' ) );
 require_once 'doodle_functions.php';
 
-add_action( 'init', array( 'WP_Doodle_Polls', 'get_instance' ) );
-add_action( 'wp_doodle_polls_init', array ( 'WP_Doodle_Post_Type', 'init' ), 10, 1 );
-add_action( 'wp_doodle_polls_init', array ( 'WP_Doodle_Admin_UI',  'get_instance' ), 10, 1 );
-add_action( 'wp_doodle_polls_init', array ( 'WP_Doodle_Admin',  'get_instance' ), 10, 1 );
-add_action( 'wp_doodle_polls_init', array ( 'WP_Doodle_Frontend',  'get_instance' ), 10, 1 );
+# register static hooks
+register_activation_hook( __FILE__,   array( 'WP_Doodle_Polls', 'on_activation' ) );
+register_deactivation_hook( __FILE__, array( 'WP_Doodle_Polls', 'on_deactivation' ) );
+register_uninstall_hook( __FILE__,    array( 'WP_Doodle_Polls', 'on_uninstall' ) );
+
+add_action( 'init',                 array( 'WP_Doodle_Polls',     'get_instance' ) );
+add_action( 'wp_doodle_polls_init', array( 'WP_Doodle_Post_Type', 'init' ),         10, 1 );
+add_action( 'wp_doodle_polls_init', array( 'WP_Doodle_Admin_UI',  'get_instance' ), 10, 1 );
+add_action( 'wp_doodle_polls_init', array( 'WP_Doodle_Admin',     'get_instance' ), 10, 1 );
+add_action( 'wp_doodle_polls_init', array( 'WP_Doodle_Frontend',  'get_instance' ), 10, 1 );
 
 class WP_Doodle_Polls {
 
@@ -47,6 +52,13 @@ class WP_Doodle_Polls {
 	 * @var string
 	 */
 	public static $dir = '';
+
+	/**
+	 * current status of the plugin
+	 *
+	 * @var string
+	 */
+	private static $status = '';
 
 	/**
 	 * get the instance to remove filters/actions
@@ -83,11 +95,57 @@ class WP_Doodle_Polls {
 		oAuth_Request_Settings::set_defaults( 'param_in_header',    FALSE );
 		oAuth_Request::$http_adapter = 'Wp_Http_Adapter';
 
-		# general stuff
-
+		# return here on de-/activation / uninstallation
+		if ( in_array( $this->status, array( 'activate', 'deactivate', 'uninstall' ) ) )
+			return;
 
 		# run all components
 		do_action( 'wp_doodle_polls_init', $this );
+	}
+
+	/**
+	 * do stuff when plugin is activated
+	 *
+	 * @wp-hook activate_wp-doodle-polls/wp-doodle-polls.php
+	 * @return void
+	 */
+	public static function on_activation() {
+
+		remove_filter( 'init', array( __CLASS__, 'get_instance' ) );
+		self::$status = 'activate';
+
+		$self = self::get_instance();
+		do_action( 'wp_doodle_polls_activate', $self );
+	}
+
+	/**
+	 * and stuff when plugin is deactivateed
+	 *
+	 * @wp-hook deactivate_wp-doodle-polls/wp-doodle-polls.php
+	 * @return void
+	 */
+	public static function on_activation() {
+
+		remove_filter( 'init', array( __CLASS__, 'get_instance' ) );
+		self::$status = 'deactivate';
+
+		$self = self::get_instance();
+		do_action( 'wp_doodle_polls_deactivate', $self );
+	}
+
+	/**
+	 * and stuff when plugin is uninstalled
+	 *
+	 * @wp-hook uninstall_wp-doodle-polls/wp-doodle-polls.php
+	 * @return void
+	 */
+	public static function on_uninstall() {
+
+		remove_filter( 'init', array( __CLASS__, 'get_instance' ) );
+		self::$status = 'uninstall';
+
+		$self = self::get_instance();
+		do_action( 'wp_doodle_polls_uninstall', $self );
 	}
 
 	/**
